@@ -1160,7 +1160,7 @@
 											"top": 356,
 											"width": 207,
 											"height": 13,
-											"text": "+draw(): void",
+											"text": "+draw(): Card",
 											"horizontalAlignment": 0
 										},
 										{
@@ -2951,7 +2951,9 @@
 									"_parent": {
 										"$ref": "AAAAAAFmesMGJs0hlsg="
 									},
-									"type": "void",
+									"type": {
+										"$ref": "AAAAAAFmerbaXcuC98U="
+									},
 									"direction": "return"
 								}
 							]
