@@ -2,6 +2,7 @@ import unittest
 from src.Card import Card
 from src.Deck import Deck
 from src.Hand import Hand
+from src.Battlefield import Battlefield
 
 class TestCard(unittest.TestCase):
     def setUp(self):
@@ -16,16 +17,16 @@ class TestCard(unittest.TestCase):
     def test_tap(self):
         self.example_card.untap()
         self.example_card.tap()
-        self.assertTrue(self.example_card.is_tapped())
+        self.assertTrue(self.example_card.is_tapped)
     
     def test_untap(self):
         self.example_card.tap()
         self.example_card.untap()
-        self.assertTrue(self.example_card.is_untapped())
+        self.assertTrue(self.example_card.is_untapped)
     
     def test_is_land(self):
-        self.assertTrue(self.example_card.is_land())
-        self.assertTrue(Card("Island").is_land())
+        self.assertTrue(self.example_card.is_land)
+        self.assertTrue(Card("Island").is_land)
 
     def test_is_in_play(self):
         pass
@@ -92,25 +93,77 @@ class TestHand(unittest.TestCase):
     def test_play_land(self):
         output_card = self.example_hand.play_land()
         self.assertIsInstance(output_card, Card)
-        self.assertTrue(output_card.is_land())
+        self.assertTrue(output_card.is_land)
         self.assertEqual(self.example_hand.size, self.initial_hand_size - 1)
 
     def test_has_playable_land(self):
         #Example hand starts off with three playable lands, so 
         #after three land plays there should be no more playable lands
-        self.assertTrue(self.example_hand.has_playable_land())
+        self.assertTrue(self.example_hand.has_playable_land)
         self.example_hand.play_land()
-        self.assertTrue(self.example_hand.has_playable_land())
+        self.assertTrue(self.example_hand.has_playable_land)
         self.example_hand.play_land()
-        self.assertTrue(self.example_hand.has_playable_land())
+        self.assertTrue(self.example_hand.has_playable_land)
         self.example_hand.play_land()
-        self.assertFalse(self.example_hand.has_playable_land())
+        self.assertFalse(self.example_hand.has_playable_land)
     
     def test_land_priority_strategy(self):
         pass
 
 class TestBattlefield(unittest.TestCase):
-    pass
+    
+    def setUp(self):
+        self.island_1 = Card(name="Island")
+        self.battlefield = Battlefield()
+    
+    def test_play_land(self):
+        self.assertNotIn(self.island_1, self.battlefield)
+        self.battlefield.play_land(self.island_1)
+        self.assertIn(self.island_1, self.battlefield)
+    
+    def test_untap_lands(self):
+        self.island_1.tap()
+        self.battlefield.play_land(self.island_1)
+        self.assertEqual(self.battlefield.num_tapped_lands, 1)
+        self.battlefield.untap_lands()
+        self.assertEqual(self.battlefield.num_tapped_lands, 0)
+    
+    def test_untapped_lands(self):
+        untapped_lands = self.battlefield.untapped_lands
+        self.assertTrue(all(isinstance(card, Card) and card.is_land and card.is_untapped for card in untapped_lands))
+    
+    def test_tapped_lands(self):
+        self.battlefield.play_land(self.island_1)
+        swamp = Card("Swamp")
+        swamp.tap()
+        plains = Card("Plains")
+        plains.tap()
+        self.battlefield.play_land(swamp)
+        self.battlefield.play_land(plains)
+        tapped_lands = self.battlefield.tapped_lands
+        self.assertTrue(all(isinstance(card, Card) and card.is_land and card.is_tapped for card in tapped_lands))
+    
+    def test_num_tapped_lands(self):
+        swamp = Card("Swamp")
+        swamp.tap()
+        plains = Card("Plains")
+        self.assertEqual(self.battlefield.num_untapped_lands, 0)
+        self.battlefield.play_land(self.island_1)
+        self.assertEqual(self.battlefield.num_tapped_lands, 0)
+        self.battlefield.play_land(swamp)
+        self.assertEqual(self.battlefield.num_tapped_lands, 1)
+        self.battlefield.play_land(plains)
+        self.assertEqual(self.battlefield.num_untapped_lands, 2)
+    
+    def test_num_untapped_lands(self):
+        self.assertEqual(self.battlefield.num_untapped_lands, 0)
+        self.battlefield.play_land(self.island_1)
+        self.assertEqual(self.battlefield.num_untapped_lands, 1)
+        self.battlefield.play_land(Card("Swamp"))
+        self.assertEqual(self.battlefield.num_untapped_lands, 2)
+        self.battlefield.play_land(Card("Plains"))
+        self.assertEqual(self.battlefield.num_untapped_lands, 3)
+
 
 class TestGame(unittest.TestCase):
     pass
