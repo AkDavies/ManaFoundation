@@ -31,12 +31,15 @@ class Card:
     def is_in_play(self, ):
         pass
 
+    @property
     def is_tapped(self, ):
         return self.status['is_tapped'] == True
 
-    def is_untapped(self, ):
-        return not self.is_tapped()
+    @property
+    def is_untapped(self):
+        return not self.is_tapped
     
+    @property
     def is_land(self):
         return 'Land' in self.attributes['types']
 

@@ -25,12 +25,12 @@ class Hand:
     
     def add_card(self, card):
         self.cards.append(card)
-        if card.is_land():
+        if card.is_land:
             item = (self.land_priority_strategy(card),card)
             self.playable_land_queue.put(item)
 
     def play_land(self, ):
-        if self.has_playable_land():
+        if self.has_playable_land:
             _, land = self.playable_land_queue.get()
             self.cards.remove(land)
             return land
@@ -38,6 +38,8 @@ class Hand:
     @staticmethod
     def land_priority_strategy(card):
         return 1
+    
+    @property
     def has_playable_land(self, ):
         return not self.playable_land_queue.empty()
 
