@@ -1,9 +1,16 @@
 #!/usr/bin/python
 #-*- coding: utf-8 -*-
+import json, os
 
 class Card:
-    def __init__(self, *args, **kwargs):
-        self.attributes = dict()
+    library_file_path = "../AllCards.json"
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, library_file_path)
+    library_file = open(filename, encoding='utf-8')
+    card_library = json.load(library_file)
+
+    def __init__(self, name, *args, **kwargs):
+        self.attributes = Card.card_library.get(name)
         self.status = {'is_tapped': False}
 
     def tap(self, ):

@@ -5,6 +5,12 @@ from src.Deck import Deck
 class TestCard(unittest.TestCase):
     def setUp(self):
         self.example_card = Card(name="Forest")
+        self.cryptic_command = Card(name="Cryptic Command")
+    
+    def test_constructor(self):
+        self.assertEqual(self.cryptic_command.attributes["name"], "Cryptic Command")
+        self.assertEqual(self.cryptic_command.attributes["convertedManaCost"], 4.0)
+        self.assertEqual(self.cryptic_command.attributes["manaCost"], '{1}{U}{U}{U}')
 
     def test_tap(self):
         self.example_card.untap()
@@ -59,7 +65,21 @@ class TestDeck(unittest.TestCase):
         self.assertIn(another_card_2, self.example_deck)
 
 class TestHand(unittest.TestCase):
-    pass
+    
+    def setUp(self):
+        pass
+    
+    def test_draw(self):
+        pass
+    
+    def test_play_land(self):
+        pass
+
+    def test_has_playable_land(self):
+        pass
+    
+    def test_land_priority_strategy(self):
+        pass
 
 class TestBattlefield(unittest.TestCase):
     pass
