@@ -12,6 +12,15 @@ class Card:
     def __init__(self, name, *args, **kwargs):
         self.attributes = Card.card_library.get(name)
         self.status = {'is_tapped': False}
+    
+    # def __eq__(self, other):
+    #     return self.attributes['name'].__eq__(other.attributes['name'])
+    
+    def __lt__(self, other):
+        return self.attributes['name'].__lt__(other.attributes['name'])
+    
+    def __repr__(self):
+        return 'Card({})'.format(self.attributes['name'])
 
     def tap(self, ):
         self.status['is_tapped'] = True
@@ -27,4 +36,7 @@ class Card:
 
     def is_untapped(self, ):
         return not self.is_tapped()
+    
+    def is_land(self):
+        return 'Land' in self.attributes['types']
 
