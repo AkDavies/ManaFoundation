@@ -7,8 +7,9 @@ class Hand:
     def __init__(self, cards=None):
         self.cards = []
         self.playable_land_queue = queue.PriorityQueue()
-        for card in cards:
-            self.add_card(card)
+        if cards:
+            for card in cards:
+                self.add_card(card)
 
     def __contains__(self, item):
         return item in self.cards

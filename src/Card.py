@@ -3,24 +3,25 @@
 import json, os
 
 class Card:
-    library_file_path = "../AllCards.json"
-    dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, library_file_path)
-    library_file = open(filename, encoding='utf-8')
-    card_library = json.load(library_file)
-
-    def __init__(self, name, *args, **kwargs):
-        self.attributes = Card.card_library.get(name)
+    """
+    Defines a representation for a Magic: the Gathering card. Contains information about
+    various characteristics of the card such as: Name, Mana Cost, Card Type and more.
+    """
+    def __init__(self, attributes=None, *args, **kwargs):
+        self.attributes = attributes
         self.status = {'is_tapped': False}
-    
-    # def __eq__(self, other):
-    #     return self.attributes['name'].__eq__(other.attributes['name'])
     
     def __lt__(self, other):
         return self.attributes['name'].__lt__(other.attributes['name'])
     
     def __repr__(self):
         return 'Card({})'.format(self.attributes['name'])
+    
+    def __getitem__(self, key):
+        try:
+            return self.attributes[key]
+        except:
+            raise Exception
 
     def tap(self, ):
         self.status['is_tapped'] = True
@@ -28,18 +29,25 @@ class Card:
     def untap(self, ):
         self.status['is_tapped'] = False
 
-    def is_in_play(self, ):
-        pass
-
     @property
     def is_tapped(self, ):
-        return self.status['is_tapped'] == True
+        return self.status['is_tapped']
 
-    @property
-    def is_untapped(self):
-        return not self.is_tapped
-    
     @property
     def is_land(self):
         return 'Land' in self.attributes['types']
 
+
+class CardLibrary:
+    library_file_path = "../AllCards.json"
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, library_file_path)
+
+    def __init__(self):
+        with open(self.filename, encoding='utf-8') as library_file:
+            self.card_library = json.load(library_file)
+    
+    def get_card(self, name: str) -> Card:
+        if name == "Expansion/Explosion":
+            name = "Cryptic Command"
+        return Card(self.card_library.get(name))
